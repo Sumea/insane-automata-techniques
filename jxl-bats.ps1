@@ -83,6 +83,7 @@ General:
   -fd, -FasterDecoding <0-4>
   -be,  -Brotli Effort <1-11>
   -dir <name>   Create subfolder for output
+  -r Move original to Recycle Bin (if output is smaller)
   -h, -Help
 
 Examples:
@@ -93,7 +94,7 @@ Examples:
 
     .\jxl-bats.ps1 -q 92 -p
 
-    .\jxl-bats.ps1 -j -s hitler
+    .\jxl-bats.ps1 -j -s .dd -dir compressed
 "@
     return
 }
@@ -109,7 +110,7 @@ if ($PSBoundParameters.ContainsKey('OutputDirectory')) {
 
 $files = Get-ChildItem -File | Where-Object Extension -in @(
     '.png','.apng','.gif','.jpg','.jpeg',
-    '.ppm','.pnm','.pfm','.pam','.pgx','.jxl'
+    '.ppm','.pnm','.pfm','.pam','.pgx'
 )
 if ($files.Count -eq 0) {
     Write-Warning "No input files found."
@@ -169,6 +170,9 @@ else {
 
     if ($LosslessJPEG) {
         $args += "--lossless_jpeg=1"
+    }    
+    else {
+        $args += "--lossless_jpeg=0"
     }
 
     if ($PSBoundParameters.ContainsKey("PhotonNoiseISO")) {
